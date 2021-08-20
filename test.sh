@@ -17,5 +17,5 @@ PROMPT="${CYAN}$>${RESET}"
 for test in ${TESTS[@]}; do
 	printf "${CYAN}-------------${test}--------------${RESET}\n"
 	file="${DIR_PATH}${test}.sh"
-	$file
+	$file 2> /dev/null
 done
