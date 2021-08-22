@@ -1,5 +1,8 @@
 import sys
 import logging
+from srcs import const
+from srcs import read
+
 fork="has taken a fork"
 eat="is eating"
 sleep="is sleeping"
@@ -22,38 +25,14 @@ ERROR_FLAGS = 0
 FLAG_LST = [ERR_FLAG_FORK, ERR_FLAG_DEATH, ERR_FLAG_EOS]
 
 MAX = 0
-LOG_FILE='./tests/tester_log'
 
 logger = logging.getLogger("logger")    #logger名loggerを取得
 logger.setLevel(logging.DEBUG)  #loggerとしてはDEBUGで
 #handlerを作成
-handler = logging.FileHandler(filename=LOG_FILE)
+handler = logging.FileHandler(filename=const.LOG_FILE)
 handler.setFormatter(logging.Formatter("%(filename)8s: %(message)s"))
 logger.addHandler(handler)
 
-def read_file ():
-    global MAX
-    with open("./tests/log") as f:
-        lst = []
-        for line in f:
-            line = line.rstrip('\n').split(" ", 2)
-            line[0] = int(line[0])
-            line[1] = int(line[1])
-            if (line[1] > MAX):
-                MAX = line[1]
-            lst.append(line)
-    return lst
-
-def read_stdin ():
-    input = []
-    for line in sys.stdin:
-        line = line.rstrip('\n').split(" ", 1)
-        line.append(line[1].strip(" ").split(" ", 1)[1])
-        line[1] = line[1].strip(" ").split(" ", 1)[0]
-        line[0] = int(line[0])
-        line[1] = int(line[1])
-        input.append(line)
-    return input
 
 def print_forks(forks, time_passed):
     # print timepassed
@@ -109,6 +88,8 @@ def visualize_forks (lst):
             print_forks(forks, time_prev - time_start)
             time_prev = time
         change_fork_status(forks, step)
+    print_forks(forks, time_prev - time_start)
+
 
 
 def check_death (av, lst):
@@ -155,7 +136,7 @@ def print_result ():
         else:
             print(f'{GREEN}[OK]{RESET}', end=" ")
     print()
-    print(f'see {LOG_FILE} for more details')
+    print(f'see {const.LOG_FILE} for more details')
 
 def print_instruction ():
     print(f'{GREEN}green = eating\n{YELLOW}yellow = waiting a fork{RESET}\n')
@@ -166,8 +147,8 @@ def main ():
     av = sys.argv
     if len(av) > 1:
         MAX = int(av[1])
-    lst = read_stdin()
-    # lst = read_file()
+    lst = read.read_stdin()
+    # lst = read.read_file()
     print_instruction()
     visualize_forks(lst)
     check_death(av, lst)
