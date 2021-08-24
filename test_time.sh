@@ -1,16 +1,7 @@
 #!/bin/bash
 
 source ./tests/const.sh
-
-check_okko (){
-	if [ $? == $1 ]; then
-		printf "${GREEN}KO :) ${RESET}\n"
-	elif [ $? == 139 ]; then
-		printf "${RED}KO :( [Crash!] ${RESET}\n"
-	else
-		printf "${RED}KO :(${RESET}\n"
-	fi
-}
+. ./tests/print_result.sh
 
 clonology_test (){
 	printf "${CYAN}[${FUNCNAME[0]}]${RESET}\n"
@@ -23,7 +14,7 @@ clonology_test (){
 		else
 			log=cat $LOG_FILE | awk '{print$1}'
 			diff <( $log | sort -n) <($log)
-			check_okko 0
+			print_result 0
 		fi
 	done
 	printf "\n"
