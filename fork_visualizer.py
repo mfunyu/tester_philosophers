@@ -29,7 +29,7 @@ MAX = 0
 logger = logging.getLogger("logger")    #logger名loggerを取得
 logger.setLevel(logging.DEBUG)  #loggerとしてはDEBUGで
 #handlerを作成
-handler = logging.FileHandler(filename=const.LOG_FILE)
+handler = logging.FileHandler(filename=const.LOG_FILE, mode='w')
 handler.setFormatter(logging.Formatter("%(filename)8s: %(message)s"))
 logger.addHandler(handler)
 
@@ -154,4 +154,5 @@ def main ():
     check_death(av, lst)
     print_result()
 
-main()
+if __name__ == "__main__":
+    main()
