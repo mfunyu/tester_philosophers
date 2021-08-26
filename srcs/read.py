@@ -6,6 +6,7 @@ def read_file ():
     with open(const.FILE) as f:
         lst = []
         for line in f:
+            print (line, end="")
             line = line.rstrip('\n').split(" ", 2)
             line[0] = int(line[0])
             line[1] = int(line[1])
@@ -15,6 +16,7 @@ def read_file ():
 def read_stdin ():
     input = []
     for line in sys.stdin:
+        print (line, end="")
         line = line.rstrip('\n').split(" ", 1)
         line.append(line[1].strip(" ").split(" ", 1)[1])
         line[1] = line[1].strip(" ").split(" ", 1)[0]
