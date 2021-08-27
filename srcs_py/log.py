@@ -18,6 +18,8 @@ the philosopher {kwargs['philo_nb']} was supposed to die at {kwargs['time_exp']}
 but died at {kwargs['time_act']}; {kwargs['time_exp'] - kwargs['time_act']}ms late")
     elif error == const.ERR_FLAG_EOS:
         logger.debug(f"operation after death")
+    elif error == const.ERR_FLAG_PRIFORMAT:
+        logger.debug(f"log format is wrong {kwargs['line']}")
 
 def print_start_log(av):
     logger.debug(f"./philo {av}")

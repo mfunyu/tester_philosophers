@@ -12,7 +12,7 @@ def read_file ():
                 line[1] = int(line[1])
                 lst.append(line)
             except:
-                log.set_error_print_log(const.ERR_FLAG_PRIFORMAT)
+                log.set_error_print_log(const.ERR_FLAG_PRIFORMAT, line=line)
                 pass
     return lst
 
@@ -28,6 +28,6 @@ def read_stdin ():
             line[1] = int(line[1])
             input.append(line)
         except:
-            log.set_error_print_log(const.ERR_FLAG_PRIFORMAT)
+            log.set_error_print_log(const.ERR_FLAG_PRIFORMAT, line=line)
             pass
     return input
