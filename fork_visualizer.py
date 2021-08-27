@@ -9,22 +9,8 @@ sleep="is sleeping"
 think="is thinking"
 died="died"
 
-
-THICK="\033[1m"
-CYAN="\033[1;36m"
-RED="\033[31m"
-GREEN="\033[32m"
-YELLOW="\033[33m"
-GRAY="\033[38;5;240m"
-RESET="\033[m"
-
-ERR_FLAG_FORK = 0b1
-ERR_FLAG_DEATH = 0b10
-ERR_FLAG_EOS = 0b100
-ERROR_FLAGS = 0
-FLAG_LST = [ERR_FLAG_FORK, ERR_FLAG_DEATH, ERR_FLAG_EOS]
-
 MAX = 0
+ERROR_FLAGS = 0
 
 logger = logging.getLogger("logger")    #logger名loggerを取得
 logger.setLevel(logging.DEBUG)  #loggerとしてはDEBUGで
@@ -40,15 +26,15 @@ def print_forks(forks, time_passed):
     i = 1
     for afork in forks:
         if (i == 1 and forks[0] == MAX):
-            print("{0}".format(GRAY), end="")
+            print("{0}".format(const.GRAY), end="")
         print("[{0}]".format(afork), end=" ")
-        print("{0}".format(RESET), end="")
+        print("{0}".format(const.RESET), end="")
         if (forks[i - 1] == i and ((i == MAX and forks[0] == i) or forks[i] == i)):
-            print("{0}".format(GREEN), end="")
+            print("{0}".format(const.GREEN), end="")
         elif ((i == MAX and forks[0] == i) or (i != MAX and forks[i] == i)):
-            print("{0}".format(YELLOW), end="")
+            print("{0}".format(const.YELLOW), end="")
         print(i, end=" ")
-        print("{0}".format(RESET), end="")
+        print("{0}".format(const.RESET), end="")
         if (i == MAX and forks[0] == i):
             print("[{0}]".format(forks[0]), end=" ")
         i = i + 1
@@ -66,12 +52,12 @@ def change_fork_status (forks, step):
         if (forks[right] == philo_nb):
             if (forks[left] != 0):
                 logger.debug(f"the fork philosopher {philo_nb} grabbed was not yet released")
-                ERROR_FLAGS |= ERR_FLAG_FORK
+                ERROR_FLAGS |= const.ERR_FLAG_FORK
             forks[left] = philo_nb
         else:
             if (forks[right] != 0):
                 logger.debug(f"the fork philosopher {philo_nb} grabbed was not yet released")
-                ERROR_FLAGS |= ERR_FLAG_FORK
+                ERROR_FLAGS |= const.ERR_FLAG_FORK
             forks[right] = philo_nb
     elif (action == sleep):
         forks[right] = 0
@@ -113,12 +99,12 @@ def check_death (av, lst):
             logger.debug(f"the philosopher {philo_dead} lived too long.\n\
 the philosopher {philo_dead} was supposed to die at {lst[0][0] + time_to_die}, \
 but died at {time}; {lst[0][0] + time_to_die - time}ms late")
-            ERROR_FLAGS |= ERR_FLAG_DEATH
+            ERROR_FLAGS |= const.ERR_FLAG_DEATH
         if (time - last_eat < time_to_die and action == died):
             logger.debug(f"the philosopher {philo_dead} died too early.\n\
 the philosopher {philo_dead} was supposed to die at {lst[0][0] + time_to_die}, \
 but died at {time}; {lst[0][0] + time_to_die - time}ms early")
-            ERROR_FLAGS |= ERR_FLAG_DEATH
+            ERROR_FLAGS |= const.ERR_FLAG_DEATH
         if (philo_nb == philo_dead and action == fork):
             num_fork = num_fork + 1
         if (num_fork == 2):
@@ -126,20 +112,21 @@ but died at {time}; {lst[0][0] + time_to_die - time}ms early")
             num_fork = 0
     if (lst[-1][2] != died):
         logger.debug(f"operation after death")
-        ERROR_FLAGS |= ERR_FLAG_EOS
+        ERROR_FLAGS |= const.ERR_FLAG_EOS
 
 def print_result ():
     print("result: ", end=" ")
-    for err_flag in FLAG_LST:
+    for err_flag in const.FLAG_LST:
         if ERROR_FLAGS & err_flag:
-            print(f'{RED}[KO]{RESET}', end=" ")
+            print(f'{const.RED}[KO]{const.RESET}', end=" ")
         else:
-            print(f'{GREEN}[OK]{RESET}', end=" ")
+            print(f'{const.GREEN}[OK]{const.RESET}', end=" ")
     print()
     print(f'see {const.LOG_FILE} for more details')
 
 def print_instruction ():
-    print(f'{GREEN}green = eating\n{YELLOW}yellow = waiting a fork{RESET}\n')
+    print(f'{const.GREEN}green = eating\n \
+{const.YELLOW}yellow = waiting a fork{const.RESET}\n')
     print(f'{"time_passed":<10}')
 
 def main ():
