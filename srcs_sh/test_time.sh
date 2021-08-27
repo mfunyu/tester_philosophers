@@ -1,7 +1,8 @@
 #!/bin/bash
 
-source ./tests/const.sh
-. ./tests/print_result.sh
+SRCS_DIR=$(dirname $0)
+source ${SRCS_DIR}/const.sh
+. ${SRCS_DIR}/print_result.sh
 
 clonology_test (){
 	printf "${CYAN}[${FUNCNAME[0]}]${RESET}\n"

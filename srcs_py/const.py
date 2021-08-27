@@ -1,5 +1,5 @@
-FILE = "./tests/log"
-LOG_FILE='./tests/tester_log'
+FILE = "./tests/logs/log"
+LOG_FILE='./tests/logs/tester_log'
 
 
 THICK="\033[1m"

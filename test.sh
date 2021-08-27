@@ -1,12 +1,12 @@
 #!/bin/bash
 
-source ./tests/const.sh
+source ./tests/srcs_sh/const.sh
 
-rm ./tests/tester_log
+rm -f ./tests/logs/tester_log
 
 for test in ${TESTS[@]}; do
 	printf "${CYAN}-------------${test}--------------${RESET}\n"
-	file="${DIR_PATH}${test}.sh"
+	file="${SRCS_DIR}/${test}.sh"
 	$file 2> /dev/null
 done
 

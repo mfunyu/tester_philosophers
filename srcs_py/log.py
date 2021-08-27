@@ -1,5 +1,5 @@
 import logging
-from srcs import const
+from srcs_py import const
 
 logger = logging.getLogger("logger")    #logger名loggerを取得
 logger.setLevel(logging.DEBUG)  #loggerとしてはDEBUGで

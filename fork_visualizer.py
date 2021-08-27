@@ -1,6 +1,5 @@
 import sys
-from srcs import const, read, log
-from srcs import read
+from srcs_py import const, read, log
 
 fork="has taken a fork"
 eat="is eating"

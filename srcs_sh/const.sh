@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DIR_PATH=./tests/
+SRCS_DIR=${DIR_PATH}srcs_sh
 
 TESTS=(
 "test_arg"
@@ -9,8 +10,8 @@ TESTS=(
 
 PHILO=./philo
 
-LOG_FILE=./tests/log
-TMP_FILE=./tests/tmp
+LOG_FILE=./tests/logs/log
+TMP_FILE=./tests/logs/tmp
 
 # define
 THICK="\033[1m"
@@ -24,8 +25,10 @@ ARGS=(
 "3 200 400 800"
 "3 600 400 100"
 "3 800 400 100"
+"4 600 350 100"
 "5 800 400 100"
 "15 200 400 800"
+# "200 410 200 200"
 )
 
 ERR_CHECK=(

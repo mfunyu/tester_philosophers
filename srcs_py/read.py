@@ -1,7 +1,5 @@
 import sys
-from srcs.const import ERROR_FLAGS, ERR_FLAG_PRIFORMAT
-
-from srcs import const, log
+from srcs_py import const, log
 
 def read_file ():
     with open(const.FILE) as f:
