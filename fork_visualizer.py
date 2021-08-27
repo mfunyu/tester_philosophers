@@ -10,7 +10,6 @@ think="is thinking"
 died="died"
 
 MAX = 0
-ERROR_FLAGS = 0
 
 logger = logging.getLogger("logger")    #logger名loggerを取得
 logger.setLevel(logging.DEBUG)  #loggerとしてはDEBUGで
@@ -41,7 +40,6 @@ def print_forks(forks, time_passed):
     print()
 
 def change_fork_status (forks, step):
-    global ERROR_FLAGS
     philo_nb = step[1]
     action = step[2]
     right = philo_nb
@@ -52,12 +50,12 @@ def change_fork_status (forks, step):
         if (forks[right] == philo_nb):
             if (forks[left] != 0):
                 logger.debug(f"the fork philosopher {philo_nb} grabbed was not yet released")
-                ERROR_FLAGS |= const.ERR_FLAG_FORK
+                const.ERROR_FLAGS |= const.ERR_FLAG_FORK
             forks[left] = philo_nb
         else:
             if (forks[right] != 0):
                 logger.debug(f"the fork philosopher {philo_nb} grabbed was not yet released")
-                ERROR_FLAGS |= const.ERR_FLAG_FORK
+                const.ERROR_FLAGS |= const.ERR_FLAG_FORK
             forks[right] = philo_nb
     elif (action == sleep):
         forks[right] = 0
@@ -79,7 +77,6 @@ def visualize_forks (lst):
 
 
 def check_death (av, lst):
-    global ERROR_FLAGS
     try:
         nb_of_pilos = int(av[1])
         time_to_die = int(av[2])
@@ -99,12 +96,12 @@ def check_death (av, lst):
             logger.debug(f"the philosopher {philo_dead} lived too long.\n\
 the philosopher {philo_dead} was supposed to die at {lst[0][0] + time_to_die}, \
 but died at {time}; {lst[0][0] + time_to_die - time}ms late")
-            ERROR_FLAGS |= const.ERR_FLAG_DEATH
+            const.ERROR_FLAGS |= const.ERR_FLAG_DEATH
         if (time - last_eat < time_to_die and action == died):
             logger.debug(f"the philosopher {philo_dead} died too early.\n\
 the philosopher {philo_dead} was supposed to die at {lst[0][0] + time_to_die}, \
 but died at {time}; {lst[0][0] + time_to_die - time}ms early")
-            ERROR_FLAGS |= const.ERR_FLAG_DEATH
+            const.ERROR_FLAGS |= const.ERR_FLAG_DEATH
         if (philo_nb == philo_dead and action == fork):
             num_fork = num_fork + 1
         if (num_fork == 2):
@@ -112,12 +109,12 @@ but died at {time}; {lst[0][0] + time_to_die - time}ms early")
             num_fork = 0
     if (lst[-1][2] != died):
         logger.debug(f"operation after death")
-        ERROR_FLAGS |= const.ERR_FLAG_EOS
+        const.ERROR_FLAGS |= const.ERR_FLAG_EOS
 
 def print_result ():
     print("result: ", end=" ")
     for err_flag in const.FLAG_LST:
-        if ERROR_FLAGS & err_flag:
+        if const.ERROR_FLAGS & err_flag:
             print(f'{const.RED}[KO]{const.RESET}', end=" ")
         else:
             print(f'{const.GREEN}[OK]{const.RESET}', end=" ")
