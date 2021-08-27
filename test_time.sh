@@ -14,7 +14,7 @@ clonology_test (){
 		else
 			log=cat $LOG_FILE | awk '{print$1}'
 			diff <( $log | sort -n) <($log)
-			print_result 0
+			print_result $?
 		fi
 	done
 	printf "\n"

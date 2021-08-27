@@ -8,7 +8,7 @@ normal_test (){
 	for arg in "${ARGS[@]}"; do
 		printf "${PROMPT} ${PHILO} ${arg}\n"
 		$PHILO $arg > /dev/null
-		print_result 0
+		print_result $?
 	done
 	printf "\n"
 }
@@ -22,7 +22,7 @@ arg_error_test (){
 		printf "${PROMPT} ${PHILO} ${arg}"
 		if [ $1 ]; then
 			diff <(echo $ERR_MSG) <(${PHILO} ${arg} 2>&1)
-			print_result 0 #no diff
+			print_result $? #diff result
 		else
 			printf "\n"
 			$PHILO $arg
