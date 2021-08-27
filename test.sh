@@ -2,6 +2,8 @@
 
 source ./tests/const.sh
 
+rm ./tests/tester_log
+
 for test in ${TESTS[@]}; do
 	printf "${CYAN}-------------${test}--------------${RESET}\n"
 	file="${DIR_PATH}${test}.sh"

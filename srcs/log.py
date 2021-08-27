@@ -4,7 +4,7 @@ from srcs import const
 logger = logging.getLogger("logger")    #logger名loggerを取得
 logger.setLevel(logging.DEBUG)  #loggerとしてはDEBUGで
 #handlerを作成
-handler = logging.FileHandler(filename=const.LOG_FILE, mode='w')
+handler = logging.FileHandler(filename=const.LOG_FILE, mode='a')
 handler.setFormatter(logging.Formatter("%(filename)8s: %(message)s"))
 logger.addHandler(handler)
 
@@ -19,3 +19,5 @@ but died at {kwargs['time_act']}; {kwargs['time_exp'] - kwargs['time_act']}ms la
     elif error == const.ERR_FLAG_EOS:
         logger.debug(f"operation after death")
 
+def print_start_log(av):
+    logger.debug(f"./philo {av}")
