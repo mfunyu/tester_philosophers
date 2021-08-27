@@ -1,7 +1,7 @@
 import sys
 from srcs.const import ERROR_FLAGS, ERR_FLAG_PRIFORMAT
 
-from srcs import const
+from srcs import const, log
 
 def read_file ():
     with open(const.FILE) as f:
@@ -14,7 +14,7 @@ def read_file ():
                 line[1] = int(line[1])
                 lst.append(line)
             except:
-                const.ERROR_FLAGS |= const.ERR_FLAG_PRIFORMAT
+                log.set_error_print_log(const.ERR_FLAG_PRIFORMAT)
                 pass
     return lst
 
@@ -30,6 +30,6 @@ def read_stdin ():
             line[1] = int(line[1])
             input.append(line)
         except:
-            const.ERROR_FLAGS |= const.ERR_FLAG_PRIFORMAT
+            log.set_error_print_log(const.ERR_FLAG_PRIFORMAT)
             pass
     return input
