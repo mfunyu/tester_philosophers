@@ -67,10 +67,10 @@ def visualize_forks (lst):
 
 def check_death (av, lst):
     try:
-        nb_of_pilos = int(av[1])
-        time_to_die = int(av[2])
-        time_to_eat = int(av[3])
-        time_to_sleep = int(av[4])
+        nb_of_pilos = int(av[0])
+        time_to_die = int(av[1])
+        time_to_eat = int(av[2])
+        time_to_sleep = int(av[3])
     except:
         print("argv is required for checking death\n")
         return (0)
@@ -113,8 +113,10 @@ def print_instruction ():
 def main ():
     global MAX
     av = sys.argv
+    av.pop(0)
+    log.print_start_log(av)
     if len(av) > 1:
-        MAX = int(av[1])
+        MAX = int(av[0])
     lst = read.read_stdin()
     # lst = read.read_file()
     print_instruction()
