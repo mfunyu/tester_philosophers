@@ -39,11 +39,11 @@ def change_fork_status (forks, step):
     if (action == fork):
         if (forks[right] == philo_nb):
             if (forks[left] != 0):
-                log.set_error_print_log(const.ERR_FLAG_FORK, philo_nb=philo_nb)
+                log.set_error_print_log(const.ERR_FLAG_FORK, time=step[0], philo_nb=philo_nb)
             forks[left] = philo_nb
         else:
             if (forks[right] != 0):
-                log.set_error_print_log(const.ERR_FLAG_FORK, philo_nb=philo_nb)
+                log.set_error_print_log(const.ERR_FLAG_FORK, time=step[0], philo_nb=philo_nb)
             forks[right] = philo_nb
     elif (action == sleep):
         forks[right] = 0
@@ -80,12 +80,12 @@ def check_death (av, lst):
         time = step[0]
         philo_nb = step[1]
         action = step[2]
-        if (last_eat - time >= lst[0][0] + time_to_die and action != died):
+        if (last_eat - time >= time_to_die + 10 and action != died):
             log.set_error_print_log(const.ERR_FLAG_DEATH, philo_nb=philo_dead,
-            time_exp=lst[0][0] + time_to_die, time_act=time)
+            time_exp=last_eat + time_to_die, time_act=time)
         if (time - last_eat < time_to_die and action == died):
             log.set_error_print_log(const.ERR_FLAG_DEATH, philo_nb=philo_dead,
-            time_exp=lst[0][0] + time_to_die, time_act=time)
+            time_exp=last_eat + time_to_die, time_act=time)
         if (philo_nb == philo_dead and action == fork):
             num_fork = num_fork + 1
         if (num_fork == 2):
@@ -119,8 +119,11 @@ def main ():
     lst = read.read_stdin()
     # lst = read.read_file()
     print_instruction()
-    visualize_forks(lst)
-    check_death(av, lst)
+    try:
+        visualize_forks(lst)
+        check_death(av, lst)
+    except:
+        print(lst, "some error occured")
     print_result()
 
 if __name__ == "__main__":
