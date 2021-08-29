@@ -95,12 +95,13 @@ def check_death (av, lst):
         log.set_error_print_log(const.ERR_FLAG_EOS)
 
 def print_result ():
-    print("result: ", end=" ")
+    print("[result]")
     for err_flag in const.FLAG_LST:
+        print(f'{const.FLAG_INFO[err_flag]}: ' , end='')
         if const.ERROR_FLAGS & err_flag:
-            print(f'{const.RED}[KO]{const.RESET}', end=" ")
+            print(f'{const.RED}[KO]{const.RESET}', end='\n')
         else:
-            print(f'{const.GREEN}[OK]{const.RESET}', end=" ")
+            print(f'{const.GREEN}[OK]{const.RESET}', end='\n')
     print()
     print(f'see {const.LOG_FILE} for more details')
 
@@ -122,9 +123,9 @@ def main ():
     try:
         visualize_forks(lst)
         check_death(av, lst)
+        print_result()
     except:
-        print(lst, "some error occured")
-    print_result()
+        print(lst, f"{const.YELLOW}some error occured{const.RESET}")
 
 if __name__ == "__main__":
     main()
