@@ -8,13 +8,11 @@ clonology_test (){
 	printf "${CYAN}[${FUNCNAME[0]}]${RESET}\n"
 	for arg in "${ARGS[@]}"; do
 		printf "${PROMPT} ${PHILO} ${arg}\n"
-		echo "${PHILO} ${arg}\n" >> $LOG_FILE
-		$PHILO $arg >> $LOG_FILE
+		$PHILO $arg > $LOG_FILE
 		if [ $? == 139 ]; then
 			printf "${RED}KO :( [Crash!] ${RESET}\n"
 		else
-			log=cat $LOG_FILE | awk '{print$1}'
-			diff <( $log | sort -n) <($log)
+			diff <( cat $LOG_FILE | awk '{print$1}' | sort -n) <(cat $LOG_FILE | awk '{print$1}')
 			print_result $?
 		fi
 	done
@@ -22,5 +20,5 @@ clonology_test (){
 
 }
 
-rm $LOG_FILE
+chmod a+rwx $LOG_FILE
 clonology_test
