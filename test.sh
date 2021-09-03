@@ -4,11 +4,15 @@ source ./tests/srcs_sh/const.sh
 
 rm -f ./tests/logs/tester_log
 
-bash_test (){
+single_bash_test (){
+	printf "${CYAN}-------------${1}--------------${RESET}\n"
+	file="${SRCS_DIR}/${1}.sh"
+	$file 2> /dev/null
+}
+
+all_bash_tests (){
 	for test in ${TESTS[@]}; do
-		printf "${CYAN}-------------${test}--------------${RESET}\n"
-		file="${SRCS_DIR}/${test}.sh"
-		$file 2> /dev/null
+		single_bash_test $test
 	done
 }
 
@@ -22,19 +26,21 @@ python_test (){
 	done
 }
 
-retval_test (){
-	test=test_retval
-	file="${SRCS_DIR}/${test}.sh"
-	printf "${CYAN}-------------${test}--------------${RESET}\n"
-	$file 2> /dev/null
+print_help (){
+	printf "${CYAN}Call test.sh with a cmd arg to exec single test\n${RESET}"
+	for test in ${TESTS[@]}; do
+		printf "$test: ./test.sh ${test:5:10}\n"
+	done
 }
 
+
 if [ -e $1 ]; then
-	bash_test
+	all_bash_tests
 	python_test
-	retval_test
+elif [ "$1" == "help" ]; then
+	print_help
 elif [ "$1" == "fork" ]; then
 	python_test
-elif [ "$1" == "retval" ]; then
-	retval_test
+elif [ "$1" ]; then
+	single_bash_test "test_${1}"
 fi

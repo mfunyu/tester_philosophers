@@ -6,6 +6,7 @@ SRCS_DIR=${DIR_PATH}srcs_sh
 TESTS=(
 "test_arg"
 "test_time"
+"test_retval"
 )
 
 PHILO=./philo
