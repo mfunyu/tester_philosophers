@@ -91,7 +91,7 @@ def check_death (av, lst):
         if (num_fork == 2):
             last_eat = time
             num_fork = 0
-    if (lst[-1][2] != died):
+    if (lst[-1][2] != died or lst[-2][2] == died):
         log.set_error_print_log(const.ERR_FLAG_EOS)
 
 def print_result ():

@@ -16,9 +16,9 @@ ERR_FLAG_DEATH = 0b100
 ERR_FLAG_EOS = 0b1000
 FLAG_LST = [ERR_FLAG_PRIFORMAT, ERR_FLAG_FORK, ERR_FLAG_DEATH, ERR_FLAG_EOS]
 FLAG_INFO = {
-ERR_FLAG_PRIFORMAT: "log format	",
-ERR_FLAG_FORK: "no stolen fork	",
-ERR_FLAG_DEATH: "death time	",
-ERR_FLAG_EOS: "end of operation",
+ERR_FLAG_PRIFORMAT: "log format	  ",
+ERR_FLAG_FORK: "no stolen fork	  ",
+ERR_FLAG_DEATH: "death time	  ",
+ERR_FLAG_EOS: "end of simulation ",
 }
 ERROR_FLAGS = 0
