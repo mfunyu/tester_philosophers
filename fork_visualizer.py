@@ -9,9 +9,9 @@ died="died"
 
 MAX = 0
 
-def print_forks(forks, time_passed):
+def print_forks(forks, time_passed, time_prev):
     # print timepassed
-    print("{0:<10}".format(time_passed), end=" ")
+    print("{1}({0:>8})".format(time_passed, str(time_prev)[-3:]), end=" ")
     i = 1
     for afork in forks:
         if (i == 1 and forks[0] == MAX):
@@ -57,10 +57,10 @@ def visualize_forks (lst):
         time = step[0]
         # when timestamp changed
         if (time != time_prev):
-            print_forks(forks, time_prev - time_start)
+            print_forks(forks, time_prev - time_start, time_prev)
             time_prev = time
         change_fork_status(forks, step)
-    print_forks(forks, time_prev - time_start)
+    print_forks(forks, time_prev - time_start, time_prev)
 
 
 
@@ -106,9 +106,9 @@ def print_result ():
     print(f'see {const.LOG_FILE} for more details')
 
 def print_instruction ():
-    print(f'{const.GREEN}green = eating\n \
+    print(f'{const.GREEN}green = eating\n\
 {const.YELLOW}yellow = waiting a fork{const.RESET}\n')
-    print(f'{"time_passed":<10}')
+    print(f'{"time(elapsed)":<10}')
 
 def main ():
     global MAX
