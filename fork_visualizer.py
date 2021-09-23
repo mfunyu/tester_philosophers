@@ -12,21 +12,21 @@ MAX = 0
 def print_forks(forks, time_passed, time_prev):
     # print timepassed
     print("{1}({0:>8})".format(time_passed, str(time_prev)[-3:]), end=" ")
+    if (forks[0] == MAX):
+        print(f'{const.GRAY}', end="")
     i = 1
     for afork in forks:
-        if (i == 1 and forks[0] == MAX):
-            print("{0}".format(const.GRAY), end="")
-        print("[{0}]".format(afork), end=" ")
-        print("{0}".format(const.RESET), end="")
-        if (forks[i - 1] == i and ((i == MAX and forks[0] == i) or forks[i] == i)):
-            print("{0}".format(const.GREEN), end="")
+        print(f'[{afork}]{const.RESET}', end=" ")
+        # set philo color
+        if (MAX != 1 and forks[i - 1] == i and
+            ((i == MAX and forks[0] == i) or forks[i] == i)):
+            print(f'{const.GREEN}', end="")
         elif ((i == MAX and forks[0] == i) or (i != MAX and forks[i] == i)):
-            print("{0}".format(const.YELLOW), end="")
-        print(i, end=" ")
-        print("{0}".format(const.RESET), end="")
-        if (i == MAX and forks[0] == i):
-            print("[{0}]".format(forks[0]), end=" ")
+            print(f'{const.YELLOW}', end="")
+        print(f'{i}{const.RESET}', end=" ")
         i = i + 1
+    if (forks[0] == MAX):
+        print(f'[{forks[0]}]', end="")
     print()
 
 def change_fork_status (forks, step):
@@ -61,7 +61,7 @@ def visualize_forks (lst):
             time_prev = time
         change_fork_status(forks, step)
     print_forks(forks, time_prev - time_start, time_prev)
-
+    print()
 
 
 def check_death (av, lst):
