@@ -10,6 +10,12 @@ YELLOW="\033[33m"
 GRAY="\033[38;5;240m"
 RESET="\033[m"
 
+fork="has taken a fork"
+eat="is eating"
+sleep="is sleeping"
+think="is thinking"
+died="died"
+
 ERR_FLAG_PRIFORMAT = 0b1
 ERR_FLAG_FORK = 0b10
 ERR_FLAG_DEATH = 0b100

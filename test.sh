@@ -17,7 +17,7 @@ all_bash_tests (){
 }
 
 python_test (){
-	test=fork_visualizer
+	test=advanced_test
 	file="${DIR_PATH}${test}.py"
 	printf "${CYAN}-------------${test}--------------${RESET}\n"
 	for arg in "${ARGS[@]}"; do
@@ -31,6 +31,7 @@ print_help (){
 	for test in ${TESTS[@]}; do
 		printf "$test: ./test.sh ${test:5:10}\n"
 	done
+	printf "advanced_test: ./test.sh advanced\n"
 }
 
 
@@ -39,7 +40,7 @@ if [ -e $1 ]; then
 	python_test
 elif [ "$1" == "help" ]; then
 	print_help
-elif [ "$1" == "fork" ]; then
+elif [ "$1" == "advanced" ]; then
 	python_test
 elif [ "$1" ]; then
 	single_bash_test "test_${1}"
