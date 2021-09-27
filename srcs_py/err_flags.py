@@ -3,6 +3,7 @@ from enum import Flag, auto
 class Error(Flag):
     LOGFORMAT = auto()
     FORK = auto()
+    TIME = auto()
     DEATH = auto()
     EOS = auto()
 
@@ -11,6 +12,8 @@ class Error(Flag):
             return "log format	  "
         if flag == Error.FORK:
             return "no stolen fork	  "
+        if flag == Error.TIME:
+            return "action time	  "
         if flag == Error.DEATH:
             return "death time	  "
         if flag == Error.EOS:

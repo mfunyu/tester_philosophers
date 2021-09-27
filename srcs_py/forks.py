@@ -1,3 +1,4 @@
+from os import defpath
 import sys
 from srcs_py import const, log, err_flags
 
@@ -70,9 +71,8 @@ class Forks():
             self.check_fork_status(time, step[1], step[2])
         self.print_forks(time_prev - time_start, time_prev)
         print()
-
+        self.check_actionlength()
         self.check_death()
-
         self.print_result()
 
     def print_forks(self, time_passed, time_prev):
@@ -150,3 +150,26 @@ class Forks():
         if (self.instructions[-1][2] != const.died or self.instructions[-2][2] == const.died):
             self.error |= err_flags.Error.EOS
             log.set_error_print_log(err_flags.Error.EOS)
+
+    def check_actionlength(self):
+        dict_tmp = {"time_eatst":0, "time_sleepst":0}
+        lst = [dict_tmp.copy() for i in range(self.nb_of_pilos)]
+        for step in self.instructions:
+            lst_i = lst[step[1] - 1]
+            time_now = step[0]
+            action = step[2]
+            if action == const.eat:
+                lst_i["time_eatst"] = time_now
+            elif action == const.sleep:
+                diff = time_now - lst_i["time_eatst"] - self.time_to_eat
+                if diff:
+                    self.error |= err_flags.Error.TIME
+                    log.set_error_print_log(err_flags.Error.TIME, time=time_now,
+                        philo_nb=step[1], action="ate", diff=diff)
+                lst_i["time_sleepst"] = time_now
+            elif action == const.think:
+                diff = time_now - lst_i["time_sleepst"] - self.time_to_sleep
+                if diff:
+                    self.error |= err_flags.Error.TIME
+                    log.set_error_print_log(err_flags.Error.TIME, time=time_now,
+                        philo_nb=step[1], action="slept", diff=diff)
