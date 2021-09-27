@@ -1,4 +1,5 @@
-from srcs_py import read, const, log
+import sys
+from srcs_py import const, log, err_flags
 
 class Forks():
 
@@ -11,12 +12,29 @@ class Forks():
         except:
             print("argv is required for checking death\n")
         self.max = self.nb_of_pilos
-        self.instructions = read.read_stdin()
+        self.error = err_flags.Error(0)
+        self.instructions = []
+        self.read_stdin()
         self.forks = [0] * self.max
         # write in log file
         av.pop(0)
         log.print_start_log(av)
         self.print_instruction()
+
+    def read_stdin (self):
+        for line in sys.stdin:
+            try:
+                print (line, end="")
+                line = line.rstrip('\n').split(" ", 1)
+                line.append(line[1].strip(" ").split(" ", 1)[1])
+                line[1] = line[1].strip(" ").split(" ", 1)[0]
+                line[0] = int(line[0])
+                line[1] = int(line[1])
+                self.instructions.append(line)
+            except:
+                self.error |= err_flags.Error.LOGFORMAT
+                log.set_error_print_log(err_flags.Error.LOGFORMAT, line=line)
+                pass
 
     def print_instruction (self):
         print(f'{const.GREEN}green = eating')
@@ -62,9 +80,9 @@ class Forks():
 
     def print_result (self):
         print("[result]")
-        for err_flag in const.FLAG_LST:
-            print(f'{const.FLAG_INFO[err_flag]}: ' , end='')
-            if const.ERROR_FLAGS & err_flag:
+        for err_flag in err_flags.Error:
+            print(f'{err_flags.Error.flag2str(err_flag)}: ' , end='')
+            if self.error & err_flag:
                 print(f'{const.RED}[KO]{const.RESET}', end='\n')
             else:
                 print(f'{const.GREEN}[OK]{const.RESET}', end='\n')
@@ -79,11 +97,13 @@ class Forks():
         if (action == const.fork):
             if (self.forks[right] == philo_nb):
                 if (self.forks[left] != 0):
-                    log.set_error_print_log(const.ERR_FLAG_FORK, time=time, philo_nb=philo_nb)
+                    self.error |= err_flags.Error.FORK
+                    log.set_error_print_log(err_flags.Error.FORK, time=time, philo_nb=philo_nb)
                 self.forks[left] = philo_nb
             else:
                 if (self.forks[right] != 0):
-                    log.set_error_print_log(const.ERR_FLAG_FORK, time=time, philo_nb=philo_nb)
+                    self.error |= err_flags.Error.FORK
+                    log.set_error_print_log(err_flags.Error.FORK, time=time, philo_nb=philo_nb)
                 self.forks[right] = philo_nb
         elif (action == const.sleep):
             self.forks[right] = 0
@@ -98,10 +118,12 @@ class Forks():
             philo_nb = step[1]
             action = step[2]
             if (last_eat - time >= self.time_to_die + 10 and action != const.died):
-                log.set_error_print_log(const.ERR_FLAG_DEATH, philo_nb=philo_dead,
+                self.error |= err_flags.Error.DEATH
+                log.set_error_print_log(err_flags.Error.DEATH, philo_nb=philo_dead,
                 time_exp=last_eat + self.time_to_die, time_act=time)
             if (time - last_eat < self.time_to_die and action == const.died):
-                log.set_error_print_log(const.ERR_FLAG_DEATH, philo_nb=philo_dead,
+                self.error |= err_flags.Error.DEATH
+                log.set_error_print_log(err_flags.Error.DEATH, philo_nb=philo_dead,
                 time_exp=last_eat + self.time_to_die, time_act=time)
             if (philo_nb == philo_dead and action == const.fork):
                 num_fork = num_fork + 1
@@ -109,4 +131,5 @@ class Forks():
                 last_eat = time
                 num_fork = 0
         if (self.instructions[-1][2] != const.died or self.instructions[-2][2] == const.died):
-            log.set_error_print_log(const.ERR_FLAG_EOS)
+            self.error |= err_flags.Error.EOS
+            log.set_error_print_log(err_flags.Error.EOS)
