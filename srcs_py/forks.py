@@ -3,7 +3,7 @@ from srcs_py import const, log, err_flags
 
 class Forks():
 
-    def __init__(self, av):
+    def __init__(self, av, readfromstdin):
         try:
             self.nb_of_pilos = int(av[1])
             self.time_to_die = int(av[2])
@@ -14,11 +14,14 @@ class Forks():
         self.max = self.nb_of_pilos
         self.error = err_flags.Error(0)
         self.instructions = []
-        self.read_stdin()
+        log.print_start_log(av)
+        if readfromstdin:
+            self.read_stdin()
+        else:
+            self.read_file()
         self.forks = [0] * self.max
         # write in log file
         av.pop(0)
-        log.print_start_log(av)
         self.print_instruction()
 
     def read_stdin (self):
@@ -35,6 +38,20 @@ class Forks():
                 self.error |= err_flags.Error.LOGFORMAT
                 log.set_error_print_log(err_flags.Error.LOGFORMAT, line=line)
                 pass
+
+    def read_file (self):
+        with open(const.FILE) as f:
+            for line in f:
+                try:
+                    print (line, end="")
+                    line = line.rstrip('\n').split(" ", 2)
+                    line[0] = int(line[0])
+                    line[1] = int(line[1])
+                    self.instructions.append(line)
+                except:
+                    self.error |= err_flags.Error.LOGFORMAT
+                    log.set_error_print_log(err_flags.Error.LOGFORMAT, line=line)
+                    pass
 
     def print_instruction (self):
         print(f'{const.GREEN}green = eating')
