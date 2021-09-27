@@ -26,9 +26,10 @@ class Forks():
         self.print_instruction()
 
     def read_stdin (self):
+        f = open(const.LOG_FILE, 'w')
         for line in sys.stdin:
             try:
-                print (line, end="")
+                f.write(line)
                 line = line.rstrip('\n').split(" ", 1)
                 line.append(line[1].strip(" ").split(" ", 1)[1])
                 line[1] = line[1].strip(" ").split(" ", 1)[0]
@@ -39,9 +40,10 @@ class Forks():
                 self.error |= err_flags.Error.LOGFORMAT
                 log.set_error_print_log(err_flags.Error.LOGFORMAT, line=line)
                 pass
+        f.close()
 
     def read_file (self):
-        with open(const.FILE) as f:
+        with open(const.READ_FILE) as f:
             for line in f:
                 try:
                     print (line, end="")
@@ -104,7 +106,7 @@ class Forks():
             else:
                 print(f'{const.GREEN}[OK]{const.RESET}', end='\n')
         print()
-        print(f'see {const.LOG_FILE} for more details')
+        print(f'see {const.RESULTS_FILE} for more details')
 
     def check_fork_status (self, time, philo_nb, action):
         right = philo_nb

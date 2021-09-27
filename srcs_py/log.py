@@ -4,7 +4,7 @@ from srcs_py import const, err_flags
 logger = logging.getLogger("logger")    #logger名loggerを取得
 logger.setLevel(logging.DEBUG)  #loggerとしてはDEBUGで
 #handlerを作成
-handler = logging.FileHandler(filename=const.LOG_FILE, mode='a')
+handler = logging.FileHandler(filename=const.RESULTS_FILE, mode='a')
 handler.setFormatter(logging.Formatter("%(filename)8s: %(message)s"))
 logger.addHandler(handler)
 
