@@ -5,6 +5,7 @@ class Error(Flag):
     FORK = auto()
     TIME = auto()
     DEATH = auto()
+    NBEAT = auto()
     EOS = auto()
 
     def flag2str (flag):
@@ -16,6 +17,8 @@ class Error(Flag):
             return "action time	  "
         if flag == Error.DEATH:
             return "death time	  "
+        if flag == Error.NBEAT:
+            return "eat times	  "
         if flag == Error.EOS:
             return "end of simulation "
 

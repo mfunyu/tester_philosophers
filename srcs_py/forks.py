@@ -10,12 +10,17 @@ class Forks():
             self.time_to_die = int(av[2])
             self.time_to_eat = int(av[3])
             self.time_to_sleep = int(av[4])
+            try:
+                self.nb_of_eat = int(av[5])
+            except:
+                self.nb_of_eat = -1
         except:
             print("argv is required for checking death\n")
         self.max = self.nb_of_pilos
         self.error = err_flags.Error(0)
         self.instructions = []
         log.print_start_log(av)
+        print("Start loading instructions ...")
         if readfromstdin:
             self.read_stdin()
         else:
@@ -23,7 +28,6 @@ class Forks():
         self.forks = [0] * self.max
         # write in log file
         av.pop(0)
-        self.print_instruction()
 
     def read_stdin (self):
         f = open(const.LOG_FILE, 'w')
@@ -46,7 +50,6 @@ class Forks():
         with open(const.READ_FILE) as f:
             for line in f:
                 try:
-                    print (line, end="")
                     line = line.rstrip('\n').split(" ", 2)
                     line[0] = int(line[0])
                     line[1] = int(line[1])
@@ -61,7 +64,10 @@ class Forks():
         print(f'{const.YELLOW}yellow = waiting a fork{const.RESET}\n')
         print(f'{"time(elapsed)":<10}')
 
-    def check_simulation (self):
+    def advanced_tests (self):
+        print("Start running tests ...")
+        self.print_instruction()
+        self.check_actionlength()
         time_start = self.instructions[0][0]
         time_prev = time_start
         for step in self.instructions:
@@ -73,8 +79,10 @@ class Forks():
             self.check_fork_status(time, step[1], step[2])
         self.print_forks(time_prev - time_start, time_prev)
         print()
-        self.check_actionlength()
-        self.check_death()
+        if self.nb_of_eat == -1:
+            self.check_death()
+        else:
+            self.check_nb_eat()
         self.print_result()
 
     def print_forks(self, time_passed, time_prev):
@@ -100,12 +108,17 @@ class Forks():
     def print_result (self):
         print("[result]")
         for err_flag in err_flags.Error:
+            if self.nb_of_eat == -1 and err_flag == err_flags.Error.NBEAT:
+                continue
+            if self.nb_of_eat != -1 and err_flag == err_flags.Error.DEATH:
+                continue
             print(f'{err_flags.Error.flag2str(err_flag)}: ' , end='')
             if self.error & err_flag:
                 print(f'{const.RED}[KO]{const.RESET}', end='\n')
             else:
                 print(f'{const.GREEN}[OK]{const.RESET}', end='\n')
         print()
+        print(f'see {const.LOG_FILE} for philo output')
         print(f'see {const.RESULTS_FILE} for more details')
 
     def check_fork_status (self, time, philo_nb, action):
@@ -152,6 +165,22 @@ class Forks():
         if (self.instructions[-1][2] != const.died or self.instructions[-2][2] == const.died):
             self.error |= err_flags.Error.EOS
             log.set_error_print_log(err_flags.Error.EOS)
+
+    def check_nb_eat(self):
+        cnt = [0] * (self.nb_of_pilos + 1)
+        exceed = 0
+        for step in self.instructions:
+            if step[2] == const.eat:
+                cnt[step[1]] = cnt[step[1]] + 1
+        for i in range(1, self.nb_of_pilos + 1):
+            if cnt[i] < self.nb_of_eat:
+                self.error |= err_flags.Error.NBEAT
+                log.set_error_print_log(err_flags.Error.NBEAT, philo_nb=step[1], eat=cnt[i])
+            if cnt[i] > self.nb_of_eat:
+                exceed = exceed + 1
+        if exceed == self.nb_of_pilos:
+            self.error |= err_flags.Error.NBEAT
+            log.set_error_print_log(err_flags.Error.NBEAT, philo_nb=step[1], eat=cnt[1])
 
     def check_actionlength(self):
         dict_tmp = {"time_eatst":0, "time_sleepst":0}

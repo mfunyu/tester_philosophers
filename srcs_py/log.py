@@ -21,6 +21,8 @@ but died at {kwargs['time_act']}; {kwargs['time_exp'] - kwargs['time_act']}ms ea
         logger.debug(f"log format is wrong {kwargs['line']}")
     elif err_flag == err_flags.Error.TIME:
         logger.debug(f"at {kwargs['time']}, philosopher {kwargs['philo_nb']} {kwargs['action']} {kwargs['diff']}ms longer")
+    elif err_flag == err_flags.Error.NBEAT:
+        logger.debug(f"philosopher {kwargs['philo_nb']} only ate {kwargs['eat']} times")
 
 def print_start_log(av):
     logger.debug(f"./philo {av}")

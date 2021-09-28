@@ -1,7 +1,7 @@
 FILE = "./tests/logs/log"
 LOG_FILE='./tests/logs/philo_log'
 RESULTS_FILE='./tests/logs/results_log'
-READ_FILE='./tests/logs/read_log'
+READ_FILE='./tests/logs/log'
 
 
 THICK="\033[1m"
