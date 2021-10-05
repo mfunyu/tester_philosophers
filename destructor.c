@@ -6,7 +6,7 @@
 /*   By: mfunyu <mfunyu@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/01 21:22:15 by mfunyu            #+#    #+#             */
-/*   Updated: 2021/10/05 22:40:46 by mfunyu           ###   ########.fr       */
+/*   Updated: 2021/10/05 22:59:29 by mfunyu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,13 @@ void	leak_checker(void)
 {
 	int		status;
 
-	status = system("leaks philo > ./tests/logs/leak_log");
+	status = system("leaks -q philo");
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
 	{
-		system("grep -C2 malloced ./tests/logs/leak_log");
 		fprintf(stderr, "%sOK! No memory leaks :)%s\n", GREEN, RESET);
 	}
 	else if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 	{
-		system("grep TOTAL -A 10 ./tests/logs/leak_log");
 		fprintf(stderr, "%sKO! Memory leak detected :(%s\n", RED, RESET);
 	}
 	else
