@@ -193,14 +193,14 @@ class Forks():
                 lst_i["time_eatst"] = time_now
             elif action == const.sleep:
                 diff = time_now - lst_i["time_eatst"] - self.time_to_eat
-                if diff:
+                if diff > const.ACCEPTABLE_DIFF:
                     self.error |= err_flags.Error.TIME
                     log.set_error_print_log(err_flags.Error.TIME, time=time_now,
                         philo_nb=step[1], action="ate", diff=diff)
                 lst_i["time_sleepst"] = time_now
             elif action == const.think:
                 diff = time_now - lst_i["time_sleepst"] - self.time_to_sleep
-                if diff:
+                if diff > const.ACCEPTABLE_DIFF:
                     self.error |= err_flags.Error.TIME
                     log.set_error_print_log(err_flags.Error.TIME, time=time_now,
                         philo_nb=step[1], action="slept", diff=diff)

@@ -14,8 +14,7 @@ normal_test (){
 	printf "\n"
 }
 
-
-ERR_MSG="Error: Invalid argument"
+ERR_MSG="Error: invalid arguments"
 
 arg_error_test (){
 	printf "${CYAN}[${FUNCNAME[0]}]${RESET}\n"

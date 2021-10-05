@@ -12,6 +12,8 @@ YELLOW="\033[33m"
 GRAY="\033[38;5;240m"
 RESET="\033[m"
 
+ACCEPTABLE_DIFF = 10
+
 fork="has taken a fork"
 eat="is eating"
 sleep="is sleeping"
