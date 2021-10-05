@@ -1,8 +1,8 @@
 #!/bin/bash
 
-source ./tests/srcs_sh/const.sh
+source ./tester_philosophers/srcs_sh/const.sh
 
-rm -f ./tests/logs/tester_log
+rm -f ${DIR_PATH}/logs/tester_log
 
 single_bash_test (){
 	printf "${CYAN}-------------${1}--------------${RESET}\n"
@@ -18,7 +18,7 @@ all_bash_tests (){
 
 python_test (){
 	test=advanced_test
-	file="${DIR_PATH}${test}.py"
+	file="${DIR_PATH}/${test}.py"
 	printf "${CYAN}-------------${test}--------------${RESET}\n"
 	for arg in "${ARGS[@]}"; do
 		printf "${PROMPT} ${PHILO} ${arg}${RESET}\n"

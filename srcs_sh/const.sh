@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DIR_PATH=./tests/
-SRCS_DIR=${DIR_PATH}srcs_sh
+DIR_PATH=./tester_philosophers
+SRCS_DIR=${DIR_PATH}/srcs_sh
 
 TESTS=(
 "test_arg"
@@ -11,8 +11,8 @@ TESTS=(
 
 PHILO=./philo
 
-LOG_FILE=./tests/logs/log
-TMP_FILE=./tests/logs/tmp
+LOG_FILE=${DIR_PATH}/logs/log
+TMP_FILE=${DIR_PATH}/logs/tmp
 
 # define
 THICK="\033[1m"

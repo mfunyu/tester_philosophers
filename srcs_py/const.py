@@ -1,8 +1,8 @@
-FILE = "./tests/logs/log"
-LOG_FILE='./tests/logs/philo_log'
-RESULTS_FILE='./tests/logs/results_log'
-READ_FILE='./tests/logs/log'
-
+DIR = './tester_philosophers'
+FILE = DIR + '/logs/log'
+LOG_FILE= DIR + '/logs/philo_log'
+RESULTS_FILE= DIR + '/logs/results_log'
+READ_FILE= DIR + '/logs/log'
 
 THICK="\033[1m"
 CYAN="\033[1;36m"
