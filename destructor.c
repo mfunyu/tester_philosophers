@@ -6,7 +6,7 @@
 /*   By: mfunyu <mfunyu@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/01 21:22:15 by mfunyu            #+#    #+#             */
-/*   Updated: 2021/09/01 21:33:12 by mfunyu           ###   ########.fr       */
+/*   Updated: 2021/10/05 22:40:46 by mfunyu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 #define RED "\033[31m"
 #define GREEN "\033[32m"
+#define YELLOW "\033[33m"
 #define RESET "\033[0m"
 
 void	leak_checker(void)__attribute__((destructor));
@@ -30,9 +31,11 @@ void	leak_checker(void)
 		system("grep -C2 malloced ./tests/logs/leak_log");
 		fprintf(stderr, "%sOK! No memory leaks :)%s\n", GREEN, RESET);
 	}
-	else
+	else if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 	{
 		system("grep TOTAL -A 10 ./tests/logs/leak_log");
 		fprintf(stderr, "%sKO! Memory leak detected :(%s\n", RED, RESET);
 	}
+	else
+		fprintf(stderr, "%sdestructor error ;)%s\n", YELLOW, RESET);
 }
