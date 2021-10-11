@@ -61,23 +61,25 @@ class Forks():
 
     def print_instruction (self):
         print(f'{const.GREEN}green = eating')
-        print(f'{const.YELLOW}yellow = waiting a fork{const.RESET}\n')
+        print(f'{const.YELLOW}yellow = waiting a fork{const.RESET}')
+        print(f'{const.RED}red = dead{const.RESET}')
+        print()
         print(f'{"time(elapsed)":<10}')
 
     def advanced_tests (self):
         print("Start running tests ...")
         self.print_instruction()
         self.check_actionlength()
-        time_start = self.instructions[0][0]
-        time_prev = time_start
+        self.time_start = self.instructions[0][0]
+        time_prev = self.time_start
         for step in self.instructions:
             time = step[0]
             # when timestamp changed
             if (time != time_prev):
-                self.print_forks(time_prev - time_start, time_prev)
+                self.print_forks(time_prev, -1)
                 time_prev = time
             self.check_fork_status(time, step[1], step[2])
-        self.print_forks(time_prev - time_start, time_prev)
+        self.print_forks(time_prev, self.instructions[-1][1])
         print()
         if self.nb_of_eat == -1:
             self.check_death()
@@ -85,8 +87,9 @@ class Forks():
             self.check_nb_eat()
         self.print_result()
 
-    def print_forks(self, time_passed, time_prev):
+    def print_forks(self, time_prev, philo_dead):
         # print timepassed
+        time_passed = time_prev - self.time_start
         print("{1}({0:>8})".format(time_passed, str(time_prev)[-3:]), end=" ")
         if (self.forks[0] == self.max):
             print(f'{const.GRAY}', end="")
@@ -94,7 +97,9 @@ class Forks():
         for afork in self.forks:
             print(f'[{afork}]{const.RESET}', end=" ")
             # set philo color
-            if (self.max != 1 and self.forks[i - 1] == i and
+            if (i == philo_dead):
+                print(f'{const.RED}', end="")
+            elif (self.max != 1 and self.forks[i - 1] == i and
                 ((i == self.max and self.forks[0] == i) or self.forks[i] == i)):
                 print(f'{const.GREEN}', end="")
             elif ((i == self.max and self.forks[0] == i) or (i != self.max and self.forks[i] == i)):
@@ -193,14 +198,14 @@ class Forks():
                 lst_i["time_eatst"] = time_now
             elif action == const.sleep:
                 diff = time_now - lst_i["time_eatst"] - self.time_to_eat
-                if diff > const.ACCEPTABLE_DIFF:
+                if diff < -const.ACCEPTABLE_DIFF or diff > const.ACCEPTABLE_DIFF:
                     self.error |= err_flags.Error.TIME
                     log.set_error_print_log(err_flags.Error.TIME, time=time_now,
                         philo_nb=step[1], action="ate", diff=diff)
                 lst_i["time_sleepst"] = time_now
             elif action == const.think:
                 diff = time_now - lst_i["time_sleepst"] - self.time_to_sleep
-                if diff > const.ACCEPTABLE_DIFF:
+                if diff < -const.ACCEPTABLE_DIFF or diff > const.ACCEPTABLE_DIFF:
                     self.error |= err_flags.Error.TIME
                     log.set_error_print_log(err_flags.Error.TIME, time=time_now,
                         philo_nb=step[1], action="slept", diff=diff)
