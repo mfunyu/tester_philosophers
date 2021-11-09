@@ -1,5 +1,7 @@
 from os import defpath
 import sys
+from typing import Counter
+from pyparsing import *
 from srcs_py import const, log, err_flags
 
 class Forks():
@@ -29,11 +31,26 @@ class Forks():
         # write in log file
         av.pop(0)
 
+    def delete_escapesquence(self, str):
+        ESC = Literal('\x1b')
+        integer = Word(nums)
+        escapeSeq = Combine(ESC + '[' + Optional(delimitedList(integer,';')) +
+                oneOf(list(alphas)))
+
+        nonAnsiString = lambda s : Suppress(escapeSeq).transformString(s)
+
+        unColorString = nonAnsiString(str)
+
+        return unColorString
+
     def read_stdin (self):
         f = open(const.LOG_FILE, 'w')
         for line in sys.stdin:
             try:
                 f.write(line)
+                line = self.delete_escapesquence(line)
+                if line == "":
+                    break
                 line = line.rstrip('\n').split(" ", 1)
                 line.append(line[1].strip(" ").split(" ", 1)[1])
                 line[1] = line[1].strip(" ").split(" ", 1)[0]
