@@ -1,8 +1,6 @@
-from os import defpath
-import sys
-from typing import Counter
-from pyparsing import *
 from srcs_py import const, log, err_flags
+from srcs_py.read import Read
+from srcs_py.print import Print
 
 class Forks():
 
@@ -24,124 +22,35 @@ class Forks():
         log.print_start_log(av)
         print("Start loading instructions ...")
         if readfromstdin:
-            self.read_stdin()
+            self.instructions = Read.read_stdin(self.error)
         else:
-            self.read_file()
+            self.instructions = Read.read_file(self.error)
         self.forks = [0] * self.max
         # write in log file
         av.pop(0)
 
-    def delete_escapesquence(self, str):
-        ESC = Literal('\x1b')
-        integer = Word(nums)
-        escapeSeq = Combine(ESC + '[' + Optional(delimitedList(integer,';')) +
-                oneOf(list(alphas)))
-
-        nonAnsiString = lambda s : Suppress(escapeSeq).transformString(s)
-
-        unColorString = nonAnsiString(str)
-
-        return unColorString
-
-    def read_stdin (self):
-        f = open(const.LOG_FILE, 'w')
-        for line in sys.stdin:
-            try:
-                f.write(line)
-                line = self.delete_escapesquence(line)
-                if line == "":
-                    break
-                line = line.rstrip('\n').split(" ", 1)
-                line.append(line[1].strip(" ").split(" ", 1)[1])
-                line[1] = line[1].strip(" ").split(" ", 1)[0]
-                line[0] = int(line[0])
-                line[1] = int(line[1])
-                self.instructions.append(line)
-            except:
-                self.error |= err_flags.Error.LOGFORMAT
-                log.set_error_print_log(err_flags.Error.LOGFORMAT, line=line)
-                pass
-        f.close()
-
-    def read_file (self):
-        with open(const.READ_FILE) as f:
-            for line in f:
-                try:
-                    line = line.rstrip('\n').split(" ", 2)
-                    line[0] = int(line[0])
-                    line[1] = int(line[1])
-                    self.instructions.append(line)
-                except:
-                    self.error |= err_flags.Error.LOGFORMAT
-                    log.set_error_print_log(err_flags.Error.LOGFORMAT, line=line)
-                    pass
-
-    def print_instruction (self):
-        print(f'{const.GREEN}green = eating')
-        print(f'{const.YELLOW}yellow = waiting a fork{const.RESET}')
-        print(f'{const.RED}red = dead{const.RESET}')
-        print()
-        print(f'{"time(elapsed)":<10}')
-
     def advanced_tests (self):
         print("Start running tests ...")
-        self.print_instruction()
+        Print.print_instruction()
         self.check_actionlength()
         self.time_start = self.instructions[0][0]
         time_prev = self.time_start
+        philo_dead = -1
         for step in self.instructions:
             time = step[0]
             # when timestamp changed
             if (time != time_prev):
-                self.print_forks(time_prev, -1)
+                Print.print_forks(self.forks, self.time_start, time_prev, philo_dead, self.nb_of_pilos)
                 time_prev = time
             self.check_fork_status(time, step[1], step[2])
-        self.print_forks(time_prev, self.instructions[-1][1])
+        philo_dead = self.instructions[-1][1]
+        Print.print_forks(self.forks, self.time_start, time_prev, philo_dead, self.nb_of_pilos)
         print()
         if self.nb_of_eat == -1:
             self.check_death()
         else:
             self.check_nb_eat()
-        self.print_result()
-
-    def print_forks(self, time_prev, philo_dead):
-        # print timepassed
-        time_passed = time_prev - self.time_start
-        print("{1}({0:>8})".format(time_passed, str(time_prev)[-3:]), end=" ")
-        if (self.forks[0] == self.max):
-            print(f'{const.GRAY}', end="")
-        i = 1
-        for afork in self.forks:
-            print(f'[{afork}]{const.RESET}', end=" ")
-            # set philo color
-            if (i == philo_dead):
-                print(f'{const.RED}', end="")
-            elif (self.max != 1 and self.forks[i - 1] == i and
-                ((i == self.max and self.forks[0] == i) or self.forks[i] == i)):
-                print(f'{const.GREEN}', end="")
-            elif ((i == self.max and self.forks[0] == i) or (i != self.max and self.forks[i] == i)):
-                print(f'{const.YELLOW}', end="")
-            print(f'{i}{const.RESET}', end=" ")
-            i = i + 1
-        if (self.forks[0] == self.max):
-            print(f'[{self.forks[0]}]', end="")
-        print()
-
-    def print_result (self):
-        print("[result]")
-        for err_flag in err_flags.Error:
-            if self.nb_of_eat == -1 and err_flag == err_flags.Error.NBEAT:
-                continue
-            if self.nb_of_eat != -1 and err_flag == err_flags.Error.DEATH:
-                continue
-            print(f'{err_flags.Error.flag2str(err_flag)}: ' , end='')
-            if self.error & err_flag:
-                print(f'{const.RED}[KO]{const.RESET}', end='\n')
-            else:
-                print(f'{const.GREEN}[OK]{const.RESET}', end='\n')
-        print()
-        print(f'see {const.LOG_FILE} for philo output')
-        print(f'see {const.RESULTS_FILE} for more details')
+        Print.print_result(self.nb_of_eat, self.error)
 
     def check_fork_status (self, time, philo_nb, action):
         right = philo_nb
