@@ -10,15 +10,10 @@ class Read():
         for line in sys.stdin:
             try:
                 f.write(line)
-                line = Parse.delete_escapesquence(line)
-                if line == "":
+                parsed_line = Parse.parse_log_line(line)
+                if parsed_line == "":
                     break
-                line = line.rstrip('\n').split(" ", 1)
-                line.append(line[1].strip(" ").split(" ", 1)[1])
-                line[1] = line[1].strip(" ").split(" ", 1)[0]
-                line[0] = int(line[0])
-                line[1] = int(line[1])
-                instructions.append(line)
+                instructions.append(parsed_line)
             except:
                 error |= err_flags.Error.LOGFORMAT
                 log.set_error_print_log(err_flags.Error.LOGFORMAT, line=line)
@@ -26,14 +21,15 @@ class Read():
         f.close()
         return instructions
 
+    # *************** May Buggy ****************** #
     def read_file (instructions, error):
         with open(const.READ_FILE) as f:
             for line in f:
                 try:
-                    line = line.rstrip('\n').split(" ", 2)
-                    line[0] = int(line[0])
-                    line[1] = int(line[1])
-                    instructions.append(line)
+                    parsed_line = Parse.parse_log_line(line)
+                    if parsed_line == "":
+                        break
+                    instructions.append(parsed_line)
                 except:
                     error |= err_flags.Error.LOGFORMAT
                     log.set_error_print_log(err_flags.Error.LOGFORMAT, line=line)
