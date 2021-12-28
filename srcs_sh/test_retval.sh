@@ -8,10 +8,16 @@ SRCS_DIR=$(dirname $0)
 source ${SRCS_DIR}/const.sh
 error=0
 
+if [ $1 ]; then
+	RETVAL_ARG=$1
+else
+	RETVAL_ARG="20 200 400 800"
+fi
+
 # funcs
 exec_loop () {
 	for i in `seq ${NTIME}` ; do
-		${PHILO} 20 200 400 800 > /dev/null
+		${PHILO} $RETVAL_ARG > /dev/null
 		result=$?
 		if [ $result == 0 ]; then
 			printf "${GREEN}.${RESET}"
@@ -37,7 +43,7 @@ print_sum () {
 }
 
 main () {
-	printf "n = ${NTIME}\n"
+	printf "${PHILO} ${RETVAL_ARG} (n = ${NTIME})\n"
 	exec_loop
 	print_sum
 }
