@@ -4,6 +4,8 @@ source ./tester_philosophers/srcs_sh/const.sh
 
 rm -f ${DIR_PATH}/logs/tester_log
 
+make
+
 single_bash_test (){
 	printf "${CYAN}-------------${1}--------------${RESET}\n"
 	file="${SRCS_DIR}/${1}.sh"
