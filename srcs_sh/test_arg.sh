@@ -14,23 +14,16 @@ normal_test (){
 	printf "\n"
 }
 
-ERR_MSG="Error: invalid arguments"
-
 arg_error_test (){
 	printf "${CYAN}[${FUNCNAME[0]}]${RESET}\n"
 	for arg in "${ERR_CHECK[@]}"; do
-		printf "${PROMPT} ${PHILO} ${arg}"
-		if [ $1 ]; then
-			diff <(echo $ERR_MSG) <(${PHILO} ${arg} 2>&1)
-			print_result $? #diff result
-		else
-			printf "\n"
-			$PHILO $arg
-		fi
+		printf "${PROMPT} ${PHILO} ${arg}\n"
+		$PHILO $arg
+		print_result $? 1
 	done
 	printf "\n"
 }
 
 
-arg_error_test mine
+arg_error_test
 normal_test

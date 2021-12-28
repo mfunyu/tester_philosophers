@@ -1,7 +1,9 @@
 #!/bin/bash
 
 function print_result (){
-	if [ $1 == 0 ]; then
+	if [ $2 ] && [ $2 == $1 ]; then
+		printf "${GREEN}OK :) ${RESET}\n"
+	elif [ $1 == 0 ]; then
 		printf "${GREEN}OK :) ${RESET}\n"
 	elif [ $1 == 139 ]; then
 		printf "${RED}KO :( [Crash!] ${RESET}\n"
